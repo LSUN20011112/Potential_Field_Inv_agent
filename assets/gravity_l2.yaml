@@ -1,0 +1,25 @@
+# Example paths: relative to this YAML config file. Copy and edit before use.
+mode: gravity
+mesh_ubc: ../data/mesh.msh
+active_below_z: 0.0
+# topography_csv: ../data/topography.csv   # alternative, remove active_below_z
+coordinate_convention: z_up
+gravity_unit: mGal
+density_unit: g/cm3
+observations:
+  gravity: ../data/gravity.csv            # x,y,z,gz,sigma; gz upward-positive
+starting_model: {gravity: 0.001}
+reference_model: {gravity: 0.0}
+regularization:
+  gravity: {type: l2, alpha_s: 0.01, alpha_x: 1.0, alpha_y: 1.0, alpha_z: 1.0}
+optimizer:
+  name: inexact_gauss_newton
+  max_iterations: 30
+  max_cg_iterations: 20
+  max_line_search_iterations: 20
+  cg_tolerance: 0.01
+beta: {beta0_ratio: 10.0, cooling_factor: 2.0, cooling_rate: 1}
+resources: {max_sensitivity_gb: 2.0}
+output:
+  dir: ../output/gravity_l2
+  formats: [npy, csv, ubc]

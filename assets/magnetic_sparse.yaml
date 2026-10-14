@@ -1,0 +1,27 @@
+mode: magnetic
+mesh_ubc: ../data/mesh.msh
+active_below_z: 0.0
+coordinate_convention: z_up
+magnetic_unit: nT
+susceptibility_unit: SI
+magnetic_field: {amplitude_nT: 50000.0, inclination_deg: 60.0, declination_deg: 10.0}
+observations:
+  magnetic: ../data/magnetic.csv          # x,y,z,tmi,sigma; nT TMI anomaly
+starting_model: {magnetic: 0.0001}
+reference_model: {magnetic: 0.0}
+regularization:
+  magnetic: {type: sparse, norms: [0, 1, 1, 1], alpha_s: 0.01, alpha_x: 1.0, alpha_y: 1.0, alpha_z: 1.0}
+optimizer:
+  name: projected_gncg
+  max_iterations: 40
+  max_cg_iterations: 20
+  max_line_search_iterations: 20
+  cg_tolerance: 0.01
+  bounds:
+    magnetic: {lower: 0.0, upper: 1.0}
+beta: {beta0_ratio: 10.0, cooling_factor: 2.0, cooling_rate: 1}
+irls: {max_iterations: 15, min_gn_iterations: 1}
+resources: {max_sensitivity_gb: 2.0}
+output:
+  dir: ../output/magnetic_sparse
+  formats: [npy, csv, ubc]

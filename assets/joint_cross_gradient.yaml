@@ -1,0 +1,38 @@
+mode: joint
+mesh_ubc: ../data/mesh.msh
+active_below_z: 0.0
+coordinate_convention: z_up
+gravity_unit: mGal
+density_unit: g/cm3
+magnetic_unit: nT
+susceptibility_unit: SI
+magnetic_field: {amplitude_nT: 50000.0, inclination_deg: 60.0, declination_deg: 10.0}
+observations:
+  gravity: ../data/gravity.csv            # x,y,z,gz,sigma; mGal, gz positive up
+  magnetic: ../data/magnetic.csv          # x,y,z,tmi,sigma; nT
+starting_model: {gravity: 0.001, magnetic: 0.0001}
+reference_model: {gravity: 0.0, magnetic: 0.0}
+regularization:
+  gravity: {type: l2, alpha_s: 0.01, alpha_x: 1.0, alpha_y: 1.0, alpha_z: 1.0}
+  magnetic: {type: l2, alpha_s: 0.01, alpha_x: 1.0, alpha_y: 1.0, alpha_z: 1.0}
+joint:
+  coupling: cross_gradient                # choose 'none' for no cross-gradient coupling
+  cross_gradient_weight: 10000.0         # illustrative ONLY; calibrate to grid scales, objectives
+  gravity_misfit_weight: 1.0
+  magnetic_misfit_weight: 1.0
+  gravity_regularization_weight: 1.0
+  magnetic_regularization_weight: 1.0
+optimizer:
+  name: projected_gncg
+  max_iterations: 35
+  max_cg_iterations: 20
+  max_line_search_iterations: 20
+  cg_tolerance: 0.01
+  bounds:
+    gravity: {lower: -1.0, upper: 1.0}
+    magnetic: {lower: 0.0, upper: 1.0}
+beta: {beta0_ratio: 10.0, cooling_factor: 2.0, cooling_rate: 1}
+resources: {max_sensitivity_gb: 2.0}
+output:
+  dir: ../output/joint_cg
+  formats: [npy, csv, ubc]

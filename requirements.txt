@@ -1,0 +1,4 @@
+numpy>=1.26,<3
+pyyaml>=6,<7
+discretize>=0.11,<1
+simpeg>=0.24,<0.26
